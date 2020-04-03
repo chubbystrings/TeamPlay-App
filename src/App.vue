@@ -62,7 +62,7 @@ export default {
     appDrawer: NavigationDrawer,
   },
   computed: {
-    ...mapGetters(['getDrawer', 'isAuthenticated', 'user', 'link', 'successMsg', 'error', 'getDarkMode']),
+    ...mapGetters(['getDrawer', 'isAuthenticated', 'user', 'link', 'successMsg', 'error', 'getDarkMode', 'getMobileViewStatus']),
     theme() {
       if (this.$route.name === 'Home' && !this.$vuetify.theme.dark && !this.isAuthenticated) return '#1976D2';
       if (this.$route.name === 'Signin' && !this.$vuetify.theme.dark && !this.isAuthenticated) return '#1976D2';
@@ -84,12 +84,9 @@ export default {
     },
     myEventHandler(e) {
       if (e.target.innerWidth <= 600) {
-        console.log('yes');
-        this.mobView = true;
-        this.$store.dispatch('mobileView', this.mobView);
+        this.$store.dispatch('mobileView', true);
       } else {
-        this.mobView = false;
-        this.$store.dispatch('mobileView', this.mobView);
+        this.$store.dispatch('mobileView', false);
       }
     },
   },
@@ -97,9 +94,9 @@ export default {
 
   created() {
     window.addEventListener('resize', this.myEventHandler);
-    window.addEventListener('reload', this.myEventHandler);
     this.$store.dispatch('tryAutoLogin');
   },
+
 
   destroyed() {
     window.removeEventListener('resize', this.myEventHandler);

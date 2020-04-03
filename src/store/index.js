@@ -210,6 +210,7 @@ export default new Vuex.Store({
 
     mobileView({ commit }, value) {
       commit('CHANGE_MOBILE_VIEW', value);
+      localStorage.setItem('mobile', value);
     },
 
     openDrawer({ commit }) {
@@ -348,6 +349,8 @@ export default new Vuex.Store({
 
     tryAutoLogin({ commit }) {
       const token = localStorage.getItem('token');
+      const mobileView = JSON.parse(localStorage.getItem('mobile'));
+      commit('CHANGE_MOBILE_VIEW', mobileView);
       if (!token) {
         return;
       }
