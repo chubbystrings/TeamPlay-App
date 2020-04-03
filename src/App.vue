@@ -51,6 +51,7 @@ export default {
     goDark: true,
     themeColor: true,
     dark: false,
+    mobView: false,
   }),
   components: {
     appHeader: Header,
@@ -81,11 +82,27 @@ export default {
     logout() {
       this.$store.dispatch('logout');
     },
+    myEventHandler(e) {
+      if (e.target.innerWidth <= 600) {
+        console.log('yes');
+        this.mobView = true;
+        this.$store.dispatch('mobileView', this.mobView);
+      } else {
+        this.mobView = false;
+        this.$store.dispatch('mobileView', this.mobView);
+      }
+    },
   },
 
 
   created() {
+    window.addEventListener('resize', this.myEventHandler);
+    window.addEventListener('reload', this.myEventHandler);
     this.$store.dispatch('tryAutoLogin');
+  },
+
+  destroyed() {
+    window.removeEventListener('resize', this.myEventHandler);
   },
 
 };

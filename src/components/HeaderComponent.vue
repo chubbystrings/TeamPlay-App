@@ -7,17 +7,29 @@
       :color="getAdminTab ? 'orange' : 'primary'"
     >
       <v-app-bar-nav-icon v-if="isAuthenticated" @click.stop="drawerChange" />
-      <v-toolbar-title>TeamPlay App</v-toolbar-title>
+      <v-toolbar-title v-if="!getMobileViewStatus">TeamPlay App</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn to="/"
-      v-if="!getAdminTab"
+      v-if="!getAdminTab && !getMobileViewStatus"
         rounded text>{{isAuthenticated ? 'TIMELINE' : 'HOME'}}
     </v-btn>
-     <v-btn v-if="isAuthenticated && !getAdminTab" to="/create-post"
+    <v-btn icon to="/"
+      v-if="!getAdminTab && getMobileViewStatus">
+        <v-icon>{{ isAuthenticated ? 'mdi-timeline' : 'mdi-home'}}</v-icon>
+    </v-btn>
+     <v-btn v-if="isAuthenticated && !getAdminTab && !getMobileViewStatus" to="/create-post"
         rounded text>Add Post
     </v-btn>
-    <v-btn v-if="user.role === 'admin' && !getAdminTab" to="/signup"
+    <v-btn icon to="/create-post"
+      v-if="!getAdminTab && isAuthenticated && getMobileViewStatus">
+        <v-icon>mdi-message-plus</v-icon>
+    </v-btn>
+    <v-btn v-if="user.role === 'admin' && !getAdminTab && !getMobileViewStatus" to="/signup"
         rounded text>Create User
+    </v-btn>
+    <v-btn icon to="/signup"
+      v-if="user.role === 'admin' && !getAdminTab && getMobileViewStatus">
+        <v-icon>mdi-account-plus</v-icon>
     </v-btn>
     <v-btn v-if="!isAuthenticated" to="/signin"
         rounded text>log In
@@ -38,7 +50,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['darkMode', 'user', 'isAuthenticated', 'getDrawer', 'getAdminTab']),
+    ...mapGetters(['darkMode', 'user', 'isAuthenticated', 'getDrawer', 'getAdminTab', 'getMobileViewStatus']),
   },
 
   methods: {

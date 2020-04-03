@@ -34,8 +34,13 @@ export default new Vuex.Store({
     commentData: [],
     dialog: false,
     editDialog: false,
+    mobileView: false,
   },
+
   mutations: {
+    CHANGE_MOBILE_VIEW(state, value) {
+      state.mobileView = value;
+    },
     CLOSE_SUCCESS_MSG(state) {
       state.successMsg = '';
     },
@@ -201,6 +206,10 @@ export default new Vuex.Store({
       localStorage.removeItem('userLname');
       localStorage.removeItem('darkMode');
       commit('CLEAR_DATA');
+    },
+
+    mobileView({ commit }, value) {
+      commit('CHANGE_MOBILE_VIEW', value);
     },
 
     openDrawer({ commit }) {
@@ -667,6 +676,9 @@ export default new Vuex.Store({
     },
     getAdminTab(state) {
       return state.adminTab;
+    },
+    getMobileViewStatus(state) {
+      return state.mobileView;
     },
   },
   modules: {

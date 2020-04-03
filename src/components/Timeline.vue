@@ -1,8 +1,8 @@
 <template>
 <div>
 <app-snack-bar v-if="successMsg"></app-snack-bar>
-<div v-if="getFeedData.length > 0" class="text-center">
-  Timelime
+<div v-if="getFeedData.length > 0" :class="getMobileViewStatus ? '' : 'text-center'">
+  {{ `${user.lastName.toLowerCase()}'s Timeline`}}
 </div>
 <div v-else class="text-center">
   No Activity
@@ -28,7 +28,7 @@ export default {
     this.$store.dispatch('feed');
   },
   computed: {
-    ...mapGetters(['getFeedData', 'errorMsg', 'successMsg', 'user']),
+    ...mapGetters(['getFeedData', 'errorMsg', 'successMsg', 'user', 'getMobileViewStatus']),
     serverSuccess() {
       if (this.successMsg) {
         return true;

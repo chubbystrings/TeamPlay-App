@@ -1,5 +1,7 @@
 <template>
-    <v-timeline>
+    <v-timeline
+    :dense="getMobileViewStatus ? true : false"
+    >
     <v-timeline-item
       large
       v-for="(n) in getFeedData"
@@ -42,32 +44,58 @@
 
     <v-card-text
     v-if="n.postType === 'article'">
-      {{n['article/url'].length > 30 ?
-      n['article/url'].split(" ").splice(0, 30,).join(" ").concat('...')
+      {{n['article/url'].length > articleLength ?
+      n['article/url'].split(" ").splice(0, articleLength,).join(" ").concat('...')
       : n['article/url']}}
     </v-card-text>
 
     <v-card-actions class="bottomBtn">
       <v-btn
+      v-if="!getMobileViewStatus"
         text
         color="primary"
         @click="view(n.id, n.postType, n.authorId)"
       >
         {{n.postType === 'article' ? 'read' : 'view'}}
       </v-btn>
+      <v-btn
+      icon
+      v-if="getMobileViewStatus"
+        text
+        color="primary"
+        @click="view(n.id, n.postType, n.authorId)"
+      >
+        <v-icon>mdi-eye</v-icon>
+      </v-btn>
       <v-spacer></v-spacer>
       <v-badge
+      v-if="!getMobileViewStatus"
       color="primary"
       :content="n.likes.length || '0'"
       class="mr-4"
       >
         Likes
       </v-badge>
+      <v-badge v-if="getMobileViewStatus"
+      color="primary"
+      :content="n.likes.length || '0'"
+      class="mr-4"
+      >
+        <v-icon>mdi-cards-heart</v-icon>
+      </v-badge>
       <v-badge
+      v-if="!getMobileViewStatus"
       color="primary"
       :content="n.commentsNumber"
       >
         comments
+      </v-badge>
+       <v-badge
+       v-if="getMobileViewStatus"
+      color="primary"
+      :content="n.commentsNumber"
+      >
+        <v-icon>mdi-comment</v-icon>
       </v-badge>
     </v-card-actions>
   </v-card>
@@ -90,7 +118,13 @@ export default {
 
   }),
   computed: {
-    ...mapGetters(['user', 'getFeedData']),
+    ...mapGetters(['user', 'getFeedData', 'getMobileViewStatus']),
+    articleLength() {
+      if (this.getMobileViewStatus) {
+        return 25;
+      }
+      return 30;
+    },
 
   },
   methods: {
@@ -115,6 +149,7 @@ export default {
   position: absolute;
   bottom: 0.1rem
 }
+
 .overFlow {
   text-overflow: ellipsis;
 }

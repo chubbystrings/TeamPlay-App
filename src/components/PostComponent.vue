@@ -1,7 +1,7 @@
 <template>
 <v-container fluid>
   <v-row>
-    <v-col cols="12">
+    <v-col cols="12" style="width: 100vw;">
       <app-delete v-if="openDeleteDialog" :postId="id" :postType="postType"></app-delete>
       <app-edit
       v-if="openEditDialog"
@@ -10,7 +10,7 @@
       :articleId="id"
       @cancel="openEditDialog = false">
       </app-edit>
-    <v-card outlined style="width: 66vw;" v-if="showCard">
+    <v-card outlined style="" v-if="showCard">
        <v-list-item>
       <v-list-item-avatar color="grey"></v-list-item-avatar>
       <v-list-item-content>
@@ -38,17 +38,27 @@
     </v-card-text>
      <v-card-actions>
       <v-badge
+      v-if="!getMobileViewStatus"
       color="primary"
       :content="commentData.length > 0 ? commentData.length : '0'"
       >
         comments
       </v-badge>
+      <v-badge
+      v-if="getMobileViewStatus"
+      color="primary"
+      :content="commentData.length > 0 ? commentData.length : '0'"
+      >
+        <v-icon>mdi-comment</v-icon>
+      </v-badge>
+
       <v-btn @click="commentOpen = !commentOpen"
       class="ma-5"
       small fab >
         <v-icon color="primary">mdi-pencil</v-icon>
       </v-btn>
-        <v-btn icon @click="likePost">
+
+      <v-btn icon @click="likePost">
           <v-badge
       color="primary"
       :content="likes ? likes : '0'"
@@ -57,46 +67,71 @@
           :color="userLiked? 'primary' : ''"
           >mdi-heart</v-icon>
         </v-badge>
-        </v-btn>
-      <v-btn text color="primary"
-      v-if="postAuthor == user.userId && postType === 'article'"
+      </v-btn>
+
+      <v-btn
+      text
+      color="primary"
+      v-if="postAuthor == user.userId && postType === 'article' && !getMobileViewStatus"
       @click="editPost"
       class="caption"
       >
         Edit
       </v-btn>
+      <v-btn
+      icon
+      text
+      color="primary"
+      v-if="postAuthor == user.userId && postType === 'article' && getMobileViewStatus"
+      @click="editPost"
+      class="caption"
+      >
+        <v-icon>mdi-comment-edit</v-icon>
+      </v-btn>
+
       <v-btn text color="primary"
-      v-if="postAuthor == user.userId"
+      v-if="postAuthor == user.userId && !getMobileViewStatus"
       @click="deletePost"
       class="caption"
       >
         delete
       </v-btn>
+      <v-btn
+      icon
+       text
+       color="primary"
+      v-if="postAuthor == user.userId && getMobileViewStatus"
+      @click="deletePost"
+      class="caption"
+      >
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
+     </v-card-actions>
        <transition
-     enter-active-class="animated bounce"
-      leave-active-class="animated fadeOut">
+        enter-active-class="animated bounce"
+        leave-active-class="animated fadeOut"
+      >
+      <v-col :cols="getMobileViewStatus ? '12' : '10'">
       <v-textarea
       v-if="commentOpen"
             label="write"
-            class="ml-1"
+            class=""
             v-model="comment"
             rows="1"
             auto-grow
             clearable
             counter="250"
-          >
+            solo-reverse
+      >
       </v-textarea>
-       </transition>
-        <transition
-     enter-active-class="animated bounce"
-      leave-active-class="animated fadeOut">
       <v-btn
       v-if="commentOpen"
-          color="blue darken-1" text
-          :disabled="!comment || comment.length > 250" @click="submit" x-large>reply
+          color="blue darken-1"
+          :disabled="!comment || comment.length > 250" @click="submit"
+          :x-large="getMobileViewStatus ? false : true">reply
         </v-btn>
-        </transition>
-     </v-card-actions>
+      </v-col>
+       </transition>
       <div v-if="commentOpen">
        <v-row >
          <v-col cols="6">
@@ -112,7 +147,7 @@
 </v-container>
 </template>
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import moment from 'moment';
 import axios from '../auth-user';
 import Comments from './commentsComponent.vue';
@@ -144,6 +179,7 @@ export default {
   }),
   computed: {
     ...mapState(['postData', 'user', 'link', 'author', 'commentData', 'dialog', 'postDetails']),
+    ...mapGetters(['getMobileViewStatus']),
 
   },
 
@@ -277,4 +313,8 @@ export default {
 </script>
 <style scoped>
 @import "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css";
+.commentBox {
+  position: relative;
+  bottom: 1rem;
+}
 </style>

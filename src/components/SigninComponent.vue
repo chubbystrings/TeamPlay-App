@@ -1,11 +1,8 @@
 <template>
  <v-container
-        class="fill-height"
-        fluid
       >
         <v-row
-          align="center"
-          justify="center"
+          class="text-center"
         >
           <v-col
             cols="12"

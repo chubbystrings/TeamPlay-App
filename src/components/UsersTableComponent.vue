@@ -27,7 +27,9 @@
       ></v-text-field>
     </v-card-title>
      <v-card-actions>
+       <v-col cols="12">
           <v-btn
+          class="mr-1"
           @click="deleteBtn"
           :color="getDarkMode ? 'orange' : 'primary'"
           :disabled="selected.length === 0 || selected.length > 1"
@@ -35,6 +37,7 @@
           Delete
           </v-btn>
           <v-btn
+          class="mr-1"
           @click="suspendBtn"
           :color="getDarkMode ? 'orange' : 'primary'"
           :disabled="selected.length === 0 || selected.length > 1"
@@ -42,12 +45,14 @@
           {{ reactivate ? 'suspend' : 'reactivate' }}
           </v-btn>
           <v-btn
+          class="mt-2"
           @click="deleteMany"
           :color="getDarkMode ? 'orange' : 'primary'"
           :disabled="selected.length <= 1 || selected.length === 0"
           >
           Delete Users ({{ selected.length > 1 ? selected.length : 0  }})
           </v-btn>
+       </v-col>
       </v-card-actions>
     <v-data-table
         v-model="selected"
@@ -99,7 +104,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['getDarkMode']),
+    ...mapGetters(['getDarkMode', 'getMobileViewStatus']),
     reactivate() {
       const row = this.selected[0];
       if (!row) {
