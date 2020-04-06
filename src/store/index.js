@@ -205,6 +205,7 @@ export default new Vuex.Store({
       localStorage.removeItem('userFname');
       localStorage.removeItem('userLname');
       localStorage.removeItem('darkMode');
+      localStorage.removeItem('mobile');
       commit('CLEAR_DATA');
     },
 

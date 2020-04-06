@@ -70,18 +70,24 @@
         </div>
     <v-row justify="center" v-if="darkModeDialog">
     <v-dialog v-model="dialog" persistent max-width="290">
-      <v-card>
+      <v-card v-if="!switchChange">
         <v-card-title class="headline">
             Turn Dark Mode {{ getDarkMode ? 'Off' : 'On'}} ?
             </v-card-title>
         <v-card-text>
             Just tap swicth and experience change
-            <v-switch :color="colorChange" v-model="dark" ></v-switch>
+            <v-switch :color="colorChange" v-model="dark" @change="switchChange = true" ></v-switch>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="darkModeDialog = false">Cancel</v-btn>
+          <v-btn color="green darken-1" text
+          @click="darkModeDialog = false, switchChange = false">Cancel</v-btn>
         </v-card-actions>
+      </v-card>
+       <v-card v-else>
+        <v-card-title class="headline">
+            NICE!! <span>&#128521;</span>
+        </v-card-title>
       </v-card>
     </v-dialog>
   </v-row>
@@ -101,6 +107,7 @@ export default {
     dark: false,
     darkModeDialog: false,
     dialog: true,
+    switchChange: false,
   }),
   components: {
   },
@@ -136,7 +143,7 @@ export default {
       this.$store.dispatch('logout');
       setTimeout(() => {
         this.$vuetify.theme.dark = false;
-      }, 2000);
+      }, 3000);
     },
   },
 
@@ -156,8 +163,10 @@ export default {
       this.$store.dispatch('darkMode', data);
       setTimeout(() => {
         this.darkModeDialog = false;
+        this.switchChange = false;
       }, 2000);
     },
+
   },
 
   mounted() {
